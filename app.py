@@ -1,25 +1,27 @@
 import streamlit as st
 import openai
 
-st.set_page_config(page_title="Asistente Pro Max", page_icon="🧠")
+# Configuración de la página
+st.set_page_config(page_title="Asistente Pro Max", page_icon="🤖")
 
-st.title("Asistente Pro Max") st.markdown("Tu compañero de estudio inteligente y buena onda.")
+# Título de la app
+st.title("Asistente Pro Max")
 
+# API Key desde los secrets
 openai.api_key = st.secrets["OPENAI_API_KEY"]
 
-notas = st.text_area("Pega aquí tus apuntes, resumen o texto del tema que estás estudiando:", height=200) pregunta = st.text_input("¿Qué quieres saber o que te explique?")
+# Área de texto para ingresar la pregunta
+prompt = st.text_area("Escribe tu pregunta o idea aquí:")
 
-if st.button("Responder con IA"): if notas and pregunta: prompt = f"Estos son mis apuntes: {notas}
-
-Con esa información, responde esta pregunta de forma clara y útil: {pregunta}"
-
-with st.spinner("Pensando como estudiante nerd..."):
-        respuesta = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": prompt}]
-        )
-        st.success("Listo, crack:")
-        st.write(respuesta['choices'][0]['message']['content'])
-else:
-    st.warning("Por favor, escribe tus apuntes y una pregunta.")
-
+# Botón para generar respuesta
+if st.button("Responder"):
+    if prompt.strip() != "":
+        with st.spinner("Pensando..."):
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=[{"role": "user", "content": prompt}]
+            )
+            st.markdown("**Respuesta:**")
+            st.write(response.choices[0].message.content.strip())
+    else:
+        st.warning("Por favor escribe algo antes de presionar el botón.")
