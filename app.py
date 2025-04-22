@@ -1,4 +1,5 @@
-import streamlit as st import openai
+import streamlit as st
+import openai
 
 st.set_page_config(page_title="Asistente Pro Max", page_icon="🧠")
 
